@@ -1,0 +1,33 @@
+
+{% macro menu(menu) %}    
+
+	<ul class="nav nav-pills nav-stacked">
+        {% for key,item in menu %}
+
+            {% if item.is_active %}
+                {% set class = 'active' %}  
+            {% elseif item.is_active_parent %}
+                {% set class = 'active parent' %}
+            {% else %}  
+                {% set class = '' %}            
+            {% endif %}                 
+
+            <li {% if class %}class="{{ class }}"{% endif %}>
+                <a href="{{ item.url }}">{{ key }} {{ item.title }}</a>
+                {% if item.children %}
+	                {{ _self.menu(item.children) }}
+	            {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endmacro %}
+
+
+{% macro submenu(menu) %}
+    {% for key,item in menu %}
+        {% if item.is_active or item.is_active_parent %}
+            {{ _self.menu(item.children) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
